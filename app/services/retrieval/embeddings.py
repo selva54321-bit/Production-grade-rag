@@ -81,7 +81,7 @@ def _embed_batch(batch: list[str]) -> list[list[float]]:
         raise RuntimeError("Gemini rate limit persisted after 4 attempts.")
     else:
         return _active_model.encode(batch, show_progress_bar=False).tolist()
-
+ 
 
 # ── Public API (same signatures as before) ─────────────────────────────────────
 
