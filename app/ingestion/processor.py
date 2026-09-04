@@ -22,6 +22,7 @@ PROCESSED_DATA_DIR = "processed_data"
 # Initialize Qdrant Client
 qdrant_client = QdrantClient(
     url=settings.QDRANT_URL,
+    port=443,
     api_key=settings.QDRANT_API_KEY,
 )
 
