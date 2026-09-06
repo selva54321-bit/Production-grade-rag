@@ -8,6 +8,7 @@ from app.services.retrieval.embedding import embed_query
 # Initialize Qdrant Client
 client = QdrantClient(
     url=settings.QDRANT_URL,
+    port=443,
     api_key=settings.QDRANT_API_KEY
 )
 
