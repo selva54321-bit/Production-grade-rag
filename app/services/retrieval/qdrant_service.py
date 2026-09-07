@@ -44,4 +44,4 @@ def search_enterprise_knowledge(query: str, limit: int = 8):
     #     print(f"❌ Qdrant Search Failed: {e}")
     #     raise
 
-print(search_enterprise_knowledge("The following table compares the Databricks CLI and the Azure CLI"))
+# print(search_enterprise_knowledge("The following table compares the Databricks CLI and the Azure CLI"))
