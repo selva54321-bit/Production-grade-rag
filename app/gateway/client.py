@@ -41,7 +41,7 @@ def get_langchain_llm(feature: str = "rag") -> ChatOpenAI:
       auth + config). The @rag/model-name format is Portkey-specific — Groq's own client
       does not understand it. You are still using Groq models; Portkey is just in the middle.
     """
-    return ChatOpenAI(
+    return ChatOpenAI(   #this only for portkey config so we using opernai interface
         api_key=settings.PORTKEY_API_KEY,
         base_url=PORTKEY_GATEWAY_URL,
         model=f"@{settings.GROQ_SLUG}/llama-3.3-70b-versatile",
@@ -50,7 +50,7 @@ def get_langchain_llm(feature: str = "rag") -> ChatOpenAI:
             api_key=settings.PORTKEY_API_KEY,
             config=GATEWAY_CONFIG,
             metadata={
-                "feature": feature,
+                "feature": feature,  
                 "_user": "rag-system",
                 "environment": "production"
             }
