@@ -76,3 +76,42 @@ source .venv/bin/activate
 # Install dependencies
 pip install -r requirements.txt
 ```
+
+
+### 3. Environment Configuration
+
+Create a `.env` file in the project root directory:
+
+```ini
+# Gemini API Key (for embeddings)
+GEMINI_API_KEY=your_gemini_api_key
+
+# Qdrant Vector Database
+QDRANT_CLUSTER_ENDPOINT=https://your-qdrant-cluster.cloud.qdrant.io
+QDRANT_API_KEY=your_qdrant_api_key
+
+# Groq LLM
+GROQ_API_KEY=your_groq_api_key
+GROQ_FALLBACK_API_KEY=your_groq_fallback_api_key
+
+# Observability (Optional)
+LOGFIRE_TOKEN=your_logfire_token
+```
+
+---
+
+## 🛠 Usage
+
+### Ingesting Documents
+
+To process, chunk, embed, and index documents into Qdrant, place your files inside the `DATA/` directory or trigger the ingestion processor:
+
+```python
+from app.ingestion.processor import process_file
+
+process_file(
+    file_path="DATA/sample_document.pdf",
+    filename="sample_document.pdf",
+    source_type="pdf"
+)
+```
