@@ -30,3 +30,49 @@ flowchart TD
 - **Production Observability & Guardrails**: Full execution tracing via **Pydantic Logfire** & input/output validation via **NVIDIA NeMo Guardrails**.
 
 ---
+
+## 📂 Project Structure
+
+```text
+├── app/
+│   ├── agent/             # LangGraph state machine, planner, retriever, responder nodes
+│   │   ├── nodes/         # Individual graph nodes (planner.py, retriever.py, responder.py)
+│   │   ├── graph.py       # LangGraph DAG workflow definition
+│   │   └── state.py       # Agent state schema
+│   ├── gateway/           # LLM Gateway client (Portkey / Groq routing)
+│   ├── ingestion/         # Document parsing, chunking, and Qdrant vector indexing
+│   │   ├── chunking/      # Text splitters and chunking strategies
+│   │   ├── loaders/       # Custom parsers (PDF, HTML, Office, Text)
+│   │   └── processor.py   # Full ingestion pipeline processor
+│   ├── services/          # Core backend services
+│   │   └── retrieval/     # Embedding service, Qdrant client, FlashRank reranking
+│   └── config.py          # Centralized configuration & environment settings
+├── DATA/                  # Local directory for input raw documents
+├── processed_data/        # Processed chunk metadata outputs
+├── requirements.txt       # Python dependencies
+├── index.html             # Basic frontend interface for document upload
+└── README.md              # Project documentation
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+- Python `3.10` or higher
+- A [Qdrant Cloud](https://qdrant.tech/) account (or local Qdrant instance)
+- API Keys for **Google Gemini**, **Groq**, and **Qdrant**
+
+### 2. Installation
+
+Clone the repository and set up a virtual environment:
+
+```bash
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
