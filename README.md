@@ -115,3 +115,34 @@ process_file(
     source_type="pdf"
 )
 ```
+
+
+### Executing the RAG Agent
+
+You can invoke the compiled agentic graph in Python:
+
+```python
+from app.agent.graph import rag_agent
+
+config = {"configurable": {"thread_id": "session-1"}}
+
+response = rag_agent.invoke(
+    {"messages": [("user", "What are the key findings in the Q3 financial report?")]},
+    config=config
+)
+
+print(response["messages"][-1].content)
+```
+
+---
+
+## 🧪 Evaluation & Tracing
+
+- **LangChain / LangSmith / Logfire**: Automated tracing and observability are integrated into the execution flow.
+- **RAGAS & DeepEval**: Evaluates context recall, precision, and response faithfulness using standard evaluation frameworks.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
