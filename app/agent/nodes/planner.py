@@ -1,4 +1,4 @@
-from app.agents.state import AgentState
+from app.agent.state import AgentState
 from app.gateway import get_langchain_llm
 import logfire
 
