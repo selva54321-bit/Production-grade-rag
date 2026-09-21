@@ -1,7 +1,8 @@
 import logfire
 from app.agent.state import AgentState
-from app.gateway import portkey_client, extract_cache_status
-
+# from app.gateway import portkey_client, extract_cache_status
+from app.gateway.client import get_langchain_llm, extract_cache_status
+from app.gateway.client import portkey_client
 
 def generate_node(state: AgentState):
     """

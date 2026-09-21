@@ -13,5 +13,10 @@ class Settings:
     GROQ_API_KEY= os.getenv("GROQ_API_KEY")
     GROQ_MODEL="llama-3.3-70b-versatile"
     GROQ_FALLBACK_API_KEY= os.getenv("GROQ_FALLBACK_API_KEY")
+    
+    # Portkey Gateway Settings
+    PORTKEY_API_KEY = os.getenv("PORTKEY_API_KEY")
+    GROQ_SLUG = os.getenv("GROQ_SLUG", "groq") # Default slug
+    GROQ_SLUG_2 = os.getenv("GROQ_SLUG_2", "groq-fallback")
 
 settings=Settings()
