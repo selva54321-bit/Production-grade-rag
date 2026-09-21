@@ -16,6 +16,7 @@ class Settings:
     
     # Portkey Gateway Settings
     PORTKEY_API_KEY = os.getenv("PORTKEY_API_KEY")
+    PORTKEY_CONFIG_ID = os.getenv("PORTKEY_CONFIG_ID") # e.g. pc-xxx
     GROQ_SLUG = os.getenv("GROQ_SLUG", "groq") # Default slug
     GROQ_SLUG_2 = os.getenv("GROQ_SLUG_2", "groq-fallback")
 

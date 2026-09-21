@@ -24,10 +24,11 @@ GATEWAY_CONFIG = {
     ]
 }
 
-portkey_client = Portkey(
-    api_key=settings.PORTKEY_API_KEY,
-    config=GATEWAY_CONFIG
-)
+kwargs = {"api_key": settings.PORTKEY_API_KEY}
+if settings.PORTKEY_CONFIG_ID:
+    kwargs["config"] = settings.PORTKEY_CONFIG_ID
+
+portkey_client = Portkey(**kwargs)
 
 
 def get_langchain_llm(feature: str = "rag") -> ChatOpenAI:
@@ -41,20 +42,23 @@ def get_langchain_llm(feature: str = "rag") -> ChatOpenAI:
       auth + config). The @rag/model-name format is Portkey-specific — Groq's own client
       does not understand it. You are still using Groq models; Portkey is just in the middle.
     """
+    headers = {
+        "api_key": settings.PORTKEY_API_KEY,
+        "metadata": {
+            "feature": feature,  
+            "_user": "rag-system",
+            "environment": "production"
+        }
+    }
+    if settings.PORTKEY_CONFIG_ID:
+        headers["config"] = settings.PORTKEY_CONFIG_ID
+
     return ChatOpenAI(   #this only for portkey config so we using opernai interface
         api_key=settings.PORTKEY_API_KEY,
         base_url=PORTKEY_GATEWAY_URL,
         model=f"@{settings.GROQ_SLUG}/llama-3.3-70b-versatile",
         temperature=0,
-        default_headers=createHeaders(
-            api_key=settings.PORTKEY_API_KEY,
-            config=GATEWAY_CONFIG,
-            metadata={
-                "feature": feature,  
-                "_user": "rag-system",
-                "environment": "production"
-            }
-        )
+        default_headers=createHeaders(**headers)
     )
 
 def extract_cache_status(response) -> str:

@@ -13,7 +13,7 @@ def run_test_query(query: str, session_id: str = "session-1"):
     
     # Initialize the input state
     inputs = {
-        "messages": [("user", query)]
+        "messages": [{"role": "user", "content": query}]
     }
     
     try:
@@ -28,6 +28,8 @@ def run_test_query(query: str, session_id: str = "session-1"):
         # You can also inspect other state variables if you modify AgentState to return them
         
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"\n[ERROR] Failed to run test query: {e}")
 if __name__ == "__main__":
     # Ensure you have your .env file configured properly with API keys before running
