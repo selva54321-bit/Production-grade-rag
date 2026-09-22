@@ -24,24 +24,32 @@ GATEWAY_CONFIG = {
     ]
 }
 
-kwargs = {"api_key": settings.PORTKEY_API_KEY}
+kwargs = {
+    "api_key": settings.PORTKEY_API_KEY or "dummy"
+}
 if settings.PORTKEY_CONFIG_ID:
     kwargs["config"] = settings.PORTKEY_CONFIG_ID
 
-portkey_client = Portkey(**kwargs)
+# If Portkey is configured, use it. Otherwise, we will rely on Langchain fallbacks in the nodes.
+try:
+    portkey_client = Portkey(**kwargs)
+except Exception:
+    portkey_client = None
 
-
-def get_langchain_llm(feature: str = "rag") -> ChatOpenAI:
+def get_langchain_llm(feature: str = "rag"):
     """
     Returns a Portkey-backed ChatOpenAI — a drop-in for ChatGroq in LangChain nodes.
-
-    Why ChatOpenAI and not ChatGroq:
-      Portkey is a proxy. It exposes an OpenAI-compatible endpoint at PORTKEY_GATEWAY_URL.
-      ChatGroq is hardwired to Groq's API and does not support routing through a proxy.
-      ChatOpenAI supports base_url (points at Portkey) and default_headers (passes Portkey
-      auth + config). The @rag/model-name format is Portkey-specific — Groq's own client
-      does not understand it. You are still using Groq models; Portkey is just in the middle.
+    If PORTKEY_API_KEY is missing, falls back directly to ChatGroq.
     """
+    if not settings.PORTKEY_API_KEY:
+        logfire.warning("PORTKEY_API_KEY is not set. Falling back to direct ChatGroq.")
+        from langchain_groq import ChatGroq
+        return ChatGroq(
+            api_key=settings.GROQ_API_KEY,
+            model_name=settings.GROQ_MODEL,
+            temperature=0
+        )
+
     headers = {
         "api_key": settings.PORTKEY_API_KEY,
         "metadata": {
@@ -53,10 +61,10 @@ def get_langchain_llm(feature: str = "rag") -> ChatOpenAI:
     if settings.PORTKEY_CONFIG_ID:
         headers["config"] = settings.PORTKEY_CONFIG_ID
 
-    return ChatOpenAI(   #this only for portkey config so we using opernai interface
+    return ChatOpenAI(   
         api_key=settings.PORTKEY_API_KEY,
         base_url=PORTKEY_GATEWAY_URL,
-        model=f"@{settings.GROQ_SLUG}/llama-3.3-70b-versatile",
+        model=f"@{settings.GROQ_SLUG}/{settings.GROQ_MODEL}",
         temperature=0,
         default_headers=createHeaders(**headers)
     )
