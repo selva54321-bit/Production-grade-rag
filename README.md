@@ -94,6 +94,13 @@ QDRANT_API_KEY=your_qdrant_api_key
 GROQ_API_KEY=your_groq_api_key
 GROQ_FALLBACK_API_KEY=your_groq_fallback_api_key
 
+# Portkey Gateway (optional). Leave both unset to call Groq directly.
+# PORTKEY_CONFIG_ID must reference a Portkey configuration that defines the
+# GROQ_SLUG provider/virtual-key alias; GROQ_API_KEY alone does not do that.
+# PORTKEY_API_KEY=your_portkey_api_key
+# PORTKEY_CONFIG_ID=pc-xxx
+# GROQ_SLUG=your_portkey_groq_alias
+
 # Observability (Optional)
 LOGFIRE_TOKEN=your_logfire_token
 ```
