@@ -24,49 +24,26 @@ GATEWAY_CONFIG = {
     ]
 }
 
-kwargs = {
-    "api_key": settings.PORTKEY_API_KEY or "dummy"
-}
-if settings.PORTKEY_CONFIG_ID:
-    kwargs["config"] = settings.PORTKEY_CONFIG_ID
-
-# If Portkey is configured, use it. Otherwise, we will rely on Langchain fallbacks in the nodes.
-try:
-    portkey_client = Portkey(**kwargs)
-except Exception:
-    portkey_client = None
+portkey_client = None
+if settings.PORTKEY_ENABLED:
+    try:
+        portkey_client = Portkey(
+            api_key=settings.PORTKEY_API_KEY,
+            config=settings.PORTKEY_CONFIG_ID,
+        )
+    except Exception:
+        portkey_client = None
 
 def get_langchain_llm(feature: str = "rag"):
     """
-    Returns a Portkey-backed ChatOpenAI — a drop-in for ChatGroq in LangChain nodes.
-    If PORTKEY_API_KEY is missing, falls back directly to ChatGroq.
+    Returns ChatGoogleGenerativeAI to use Gemini API.
     """
-    if not settings.PORTKEY_API_KEY:
-        logfire.warning("PORTKEY_API_KEY is not set. Falling back to direct ChatGroq.")
-        from langchain_groq import ChatGroq
-        return ChatGroq(
-            api_key=settings.GROQ_API_KEY,
-            model_name=settings.GROQ_MODEL,
-            temperature=0
-        )
-
-    headers = {
-        "api_key": settings.PORTKEY_API_KEY,
-        "metadata": {
-            "feature": feature,  
-            "_user": "rag-system",
-            "environment": "production"
-        }
-    }
-    if settings.PORTKEY_CONFIG_ID:
-        headers["config"] = settings.PORTKEY_CONFIG_ID
-
-    return ChatOpenAI(   
-        api_key=settings.PORTKEY_API_KEY,
-        base_url=PORTKEY_GATEWAY_URL,
-        model=f"@{settings.GROQ_SLUG}/{settings.GROQ_MODEL}",
-        temperature=0,
-        default_headers=createHeaders(**headers)
+    from langchain_google_genai import ChatGoogleGenerativeAI
+    
+    return ChatGoogleGenerativeAI(
+        model=settings.GEMINI_MODEL,
+        google_api_key=settings.GEMINI_API_KEY,
+        temperature=0
     )
 
 def extract_cache_status(response) -> str:
