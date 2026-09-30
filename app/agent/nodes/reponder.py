@@ -58,34 +58,13 @@ def generate_node(state: AgentState):
 
     with logfire.span("✍️ LLM Synthesis"):
         try:
-            if portkey_client:
-                response = portkey_client.chat.completions.create(
-                    model=f"@{settings.GROQ_SLUG}/{settings.GROQ_MODEL}",
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.1
-                )
-                content = response.choices[0].message.content
-                cache_status = extract_cache_status(response)
-                is_cache_hit = cache_status == "HIT"
-            else:
-                from groq import Groq
-                groq_client = Groq(api_key=settings.GROQ_API_KEY)
-                response = groq_client.chat.completions.create(
-                    model=settings.GROQ_MODEL,
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.1
-                )
-                content = response.choices[0].message.content
-                is_cache_hit = False
+            llm = get_langchain_llm(feature="responder")
+            response = llm.invoke(prompt)
+            content = response.content
 
-            if is_cache_hit:
-                logfire.info("⚡ Gateway Cache Hit — response served from Portkey cache.")
-                plan_update = state["plan"] + ["Cache: Hit ⚡"]
-                status = "Cache hit — instant response."
-            else:
-                logfire.info("✅ Response synthesised via LLM.")
-                plan_update = state["plan"]
-                status = "Response generated."
+            logfire.info("✅ Response synthesised via Gemini LLM.")
+            plan_update = state["plan"]
+            status = "Response generated."
 
             return {
                 "final_answer": content,
