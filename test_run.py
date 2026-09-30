@@ -21,7 +21,7 @@ def run_test_query(query: str, session_id: str = "session-1"):
         response = rag_agent.invoke(inputs, config=config)
         
         # Get the final answer
-        final_message = response["messages"][-1].content
+        final_message = response["messages"][-1]["content"]
         print("\n--- Final Response ---")
         print(final_message)
         
