@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # Ensure you have your .env file configured properly with API keys before running
     
     # Test 1: Direct Conversational (Should route to responder directly)
-    run_test_query("Hello, how are you?")
+    # run_test_query("Hello, how are you?")
     
     # Test 2: RAG Query (Should route to retriever, search Qdrant, and then responder)
-    run_test_query("What are the key findings in the Q3 financial report?")
+    run_test_query("""What are the exact key-value configuration examples given for labels, annotations, and selectors in architecture.pptx?""")
