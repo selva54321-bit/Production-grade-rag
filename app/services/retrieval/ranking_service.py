@@ -1,7 +1,7 @@
 import time
 import logfire
 from flashrank import Ranker, RerankRequest
-
+# it uses ms-marco-MiniLM-L-6-v2
 # Lazy initialization - Ranker is loaded on first use to ensure logfire.configure() has run
 _ranker = None
 
