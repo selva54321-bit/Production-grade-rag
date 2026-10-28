@@ -152,6 +152,3 @@ print(response["messages"][-1].content)
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License.
